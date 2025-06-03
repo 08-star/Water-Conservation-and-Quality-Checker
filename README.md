@@ -133,7 +133,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions, suggestions, or issues:
 - Open an issue on GitHub
-- Contact: [your-email@example.com]
+- Contact:adtuvedant17@gmail.com
 
 ---
 
