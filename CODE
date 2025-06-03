@@ -1,0 +1,306 @@
+import javax.swing.*;
+import java.awt.*;
+import java.text.DecimalFormat;
+
+public class WaterQualityChecker extends JFrame {
+    private final JTabbedPane tabbedPane;
+
+    private JTextField showerField, toiletField, laundryField, dishesField, outdoorField;
+    private JLabel usageResultLabel;
+
+    private JTextField phField, turbidityField, tdsField, chlorineField;
+    private JTextArea qualityResultArea;
+
+    public WaterQualityChecker() {
+        setTitle("Water Conservation and Quality Checker");
+        setSize(600, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        tabbedPane = new JTabbedPane();
+
+        createUsagePanel();
+        createQualityPanel();
+        createTipsPanel();
+
+        add(tabbedPane);
+    }
+
+    private void createUsagePanel() {
+        // Water Usage Calculator Components
+        JPanel usagePanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // Title
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        JLabel titleLabel = new JLabel("Daily Water Usage Calculator");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        usagePanel.add(titleLabel, gbc);
+
+        // Input fields
+        gbc.gridwidth = 1;
+        gbc.gridy++;
+        usagePanel.add(new JLabel("Shower (minutes):"), gbc);
+
+        gbc.gridx = 1;
+        showerField = new JTextField(10);
+        usagePanel.add(showerField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        usagePanel.add(new JLabel("Toilet flushes:"), gbc);
+
+        gbc.gridx = 1;
+        toiletField = new JTextField(10);
+        usagePanel.add(toiletField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        usagePanel.add(new JLabel("Laundry loads:"), gbc);
+
+        gbc.gridx = 1;
+        laundryField = new JTextField(10);
+        usagePanel.add(laundryField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        usagePanel.add(new JLabel("Dishwashing (minutes):"), gbc);
+
+        gbc.gridx = 1;
+        dishesField = new JTextField(10);
+        usagePanel.add(dishesField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        usagePanel.add(new JLabel("Outdoor use (gallons):"), gbc);
+
+        gbc.gridx = 1;
+        outdoorField = new JTextField(10);
+        usagePanel.add(outdoorField, gbc);
+
+        // Calculate button
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.CENTER;
+        JButton calculateButton = new JButton("Calculate Water Usage");
+        calculateButton.addActionListener(_ -> calculateWaterUsage());
+        usagePanel.add(calculateButton, gbc);
+
+        // Result label
+        gbc.gridy++;
+        usageResultLabel = new JLabel(" ");
+        usageResultLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        usagePanel.add(usageResultLabel, gbc);
+
+        tabbedPane.addTab("Water Usage", usagePanel);
+    }
+
+    private void calculateWaterUsage() {
+        try {
+            // Average water usage rates (gallons)
+            double showerRate = 2.1; // per minute
+            double toiletRate = 1.6; // per flush
+            double laundryRate = 25; // per load
+            double dishesRate = 1; // per minute (hand washing)
+
+            double shower = Double.parseDouble(showerField.getText()) * showerRate;
+            double toilet = Double.parseDouble(toiletField.getText()) * toiletRate;
+            double laundry = Double.parseDouble(laundryField.getText()) * laundryRate;
+            double dishes = Double.parseDouble(dishesField.getText()) * dishesRate;
+            double outdoor = Double.parseDouble(outdoorField.getText());
+
+            double total = shower + toilet + laundry + dishes + outdoor;
+
+            DecimalFormat df = new DecimalFormat("#.##");
+            String result = "Total daily water usage: " + df.format(total) + " gallons";
+
+            // Add conservation message based on usage
+            if (total > 100) {
+                result += " (High usage - consider conservation methods)";
+            } else if (total > 50) {
+                result += " (Moderate usage)";
+            } else {
+                result += " (Good job conserving water!)";
+            }
+
+            usageResultLabel.setText(result);
+        } catch (NumberFormatException ex) {
+            usageResultLabel.setText("Please enter valid numbers in all fields");
+        }
+    }
+
+    private void createQualityPanel() {
+        // Water Quality Checker Components
+        JPanel qualityPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // Title
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        JLabel titleLabel = new JLabel("Water Quality Checker");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        qualityPanel.add(titleLabel, gbc);
+
+        // Input fields
+        gbc.gridwidth = 1;
+        gbc.gridy++;
+        qualityPanel.add(new JLabel("pH Level (0-14):"), gbc);
+
+        gbc.gridx = 1;
+        phField = new JTextField(10);
+        qualityPanel.add(phField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        qualityPanel.add(new JLabel("Turbidity (NTU):"), gbc);
+
+        gbc.gridx = 1;
+        turbidityField = new JTextField(10);
+        qualityPanel.add(turbidityField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        qualityPanel.add(new JLabel("TDS (mg/L):"), gbc);
+
+        gbc.gridx = 1;
+        tdsField = new JTextField(10);
+        qualityPanel.add(tdsField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        qualityPanel.add(new JLabel("Chlorine (mg/L):"), gbc);
+
+        gbc.gridx = 1;
+        chlorineField = new JTextField(10);
+        qualityPanel.add(chlorineField, gbc);
+
+        // Check button
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.CENTER;
+        JButton checkButton = new JButton("Check Water Quality");
+        checkButton.addActionListener(_ -> checkWaterQuality());
+        qualityPanel.add(checkButton, gbc);
+
+        // Result area
+        gbc.gridy++;
+        qualityResultArea = new JTextArea(10, 40);
+        qualityResultArea.setEditable(false);
+        qualityResultArea.setLineWrap(true);
+        qualityResultArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(qualityResultArea);
+        qualityPanel.add(scrollPane, gbc);
+
+        tabbedPane.addTab("Water Quality", qualityPanel);
+    }
+
+    private void checkWaterQuality() {
+        try {
+            double ph = Double.parseDouble(phField.getText());
+            double turbidity = Double.parseDouble(turbidityField.getText());
+            double tds = Double.parseDouble(tdsField.getText());
+            double chlorine = Double.parseDouble(chlorineField.getText());
+
+            StringBuilder result = new StringBuilder();
+
+            // Check pH
+            result.append("pH Level: ");
+            if (ph < 6.5) {
+                result.append("Too acidic (ideal: 6.5-8.5). May corrode pipes.\n");
+            } else if (ph > 8.5) {
+                result.append("Too alkaline (ideal: 6.5-8.5). May cause scaling.\n");
+            } else {
+                result.append("Good (within 6.5-8.5 range).\n");
+            }
+
+            // Check turbidity
+            result.append("Turbidity: ");
+            if (turbidity > 5) {
+                result.append("High (should be <5 NTU). May contain harmful particles.\n");
+            } else {
+                result.append("Good (within acceptable range).\n");
+            }
+
+            // Check TDS
+            result.append("Total Dissolved Solids: ");
+            if (tds > 500) {
+                result.append("High (should be <500 mg/L). Poor taste, may contain salts.\n");
+            } else if (tds > 300) {
+                result.append("Moderate (ideal <300 mg/L).\n");
+            } else {
+                result.append("Good (within acceptable range).\n");
+            }
+
+            // Check chlorine
+            result.append("Chlorine: ");
+            if (chlorine > 4) {
+                result.append("Too high (should be <4 mg/L). May cause health issues.\n");
+            } else if (chlorine < 0.2) {
+                result.append("Too low (should be 0.2-4 mg/L). Insufficient disinfection.\n");
+            } else {
+                result.append("Good (within 0.2-4 mg/L range).\n");
+            }
+
+            qualityResultArea.setText(result.toString());
+        } catch (NumberFormatException ex) {
+            qualityResultArea.setText("Please enter valid numbers in all fields");
+        }
+    }
+
+    private void createTipsPanel() {
+        // Conservation Tips Components
+        JPanel tipsPanel = new JPanel(new BorderLayout());
+
+        JLabel titleLabel = new JLabel("Water Conservation Tips", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        tipsPanel.add(titleLabel, BorderLayout.NORTH);
+
+        JTextArea tipsArea = new JTextArea();
+        tipsArea.setEditable(false);
+        tipsArea.setLineWrap(true);
+        tipsArea.setWrapStyleWord(true);
+        tipsArea.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        String tips = """
+                1. Fix leaks promptly - a dripping faucet can waste 20 gallons per day
+                
+                2. Install low-flow showerheads and faucet aerators
+                
+                3. Take shorter showers - each minute less saves 2.5 gallons
+                
+                4. Turn off the tap while brushing teeth or shaving
+                
+                5. Only run full loads in dishwashers and washing machines
+                
+                6. Water plants early in the morning to reduce evaporation
+                
+                7. Use a broom instead of a hose to clean driveways
+                
+                8. Collect rainwater for outdoor use
+                
+                9. Install a dual-flush or low-flow toilet
+                
+                10. Choose native plants that require less water for landscaping""";
+
+        tipsArea.setText(tips);
+
+        JScrollPane scrollPane = new JScrollPane(tipsArea);
+        tipsPanel.add(scrollPane, BorderLayout.CENTER);
+
+        tabbedPane.addTab("Conservation Tips", tipsPanel);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new WaterQualityChecker().setVisible(true));
+    }
+}
+
